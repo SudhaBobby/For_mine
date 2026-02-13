@@ -157,6 +157,7 @@ function nextQuestion(){
     showQuestion();
   }else{
     const msg="Her answers ❤️\n\n"+answers.join("\n\n");
+    let number = "919342584289"; // include country code, no + or 0
     window.open("https://wa.me/?text="+encodeURIComponent(msg),"_blank");
     setTimeout(()=>location.href="play.html",800);
   }

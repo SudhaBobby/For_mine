@@ -159,28 +159,6 @@ button {
   z-index: 9999;
 }
 
-/* Progress bar */
-#videoProgress {
-  position: fixed;
-  bottom: 25px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  height: 8px;
-  background: rgba(255,255,255,0.3);
-  border-radius: 10px;
-  overflow: hidden;
-  display: none;
-  z-index: 10000;
-}
-
-#videoProgressFill {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(135deg, #ff4b7d, #ff2f92);
-  border-radius: 10px;
-}
-
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -198,17 +176,13 @@ button {
 <div id="loader">
   <div class="loader-text">Checking your answer… 😏💖</div>
   <div class="loader-text">Start of our life... 💕💖</div>
+  <div class="loader-text">chinna video pakalam... 😍💖</div>
   <div class="emoji-row">
     <div class="emoji">💕</div>
     <div class="emoji">😆</div>
     <div class="emoji">💍</div>
     <div class="emoji">😍</div>
   </div>
-</div>
-
-<!-- VIDEO PROGRESS -->
-<div id="videoProgress">
-  <div id="videoProgressFill"></div>
 </div>
 
 <div class="container">
@@ -225,17 +199,17 @@ button {
   <p id="msg"></p>
 </div>
 
-<!-- VIDEO PLAYER -->
+<!-- VIDEO PLAYER WITH BUILT-IN CONTROLS ONLY -->
 <video id="celebrateVideo" controls playsinline preload="auto">
   <source src="96.mp4" type="video/mp4">
 </video>
 
 <script>
 const qas = [
-  { q: "Who is the most handsome person in your life? 😏", a: "sudar paiya" },
-  { q: "Who owns your heart? ❤️", a: "sudar paiya" },
-  { q: "Who will you marry? 💍", a: "sudar paiya" },
-  { q: "Who is your forever person? 🥹", a: "sudar paiya" }
+  { q: "Who is the most handsome person in your life? 😏", a: "eli" },
+  { q: "Who owns your heart? ❤️", a: "eli" },
+  { q: "Who will you marry? 💍", a: "eli" },
+  { q: "Who is your forever person? 🥹", a: "eli" }
 ];
 
 const pick = qas[Math.floor(Math.random() * qas.length)];
@@ -246,9 +220,6 @@ const msg = document.getElementById("msg");
 const loader = document.getElementById("loader");
 const bgMusic = document.getElementById("bgMusic");
 const video = document.getElementById("celebrateVideo");
-
-const videoProgress = document.getElementById("videoProgress");
-const videoProgressFill = document.getElementById("videoProgressFill");
 
 function check() {
   const v = document.getElementById("answer").value.trim().toLowerCase();
@@ -266,7 +237,12 @@ function check() {
       loader.style.display = "none";
       video.style.display = "block";
       video.play();
-      videoProgress.style.display = "block";
+
+      // Redirect after video ends
+      video.addEventListener("ended", () => {
+        window.location.href = "story.html"; // <-- your target page
+      });
+
     }, 2500);
 
   } else {
@@ -276,12 +252,6 @@ function check() {
   }
 }
 
-video.addEventListener("timeupdate", () => {
-  if (video.duration) {
-    videoProgressFill.style.width =
-      (video.currentTime / video.duration) * 100 + "%";
-  }
-});
 
 /* Floating hearts */
 setInterval(() => {

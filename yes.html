@@ -8,6 +8,7 @@
 <style>
 *{box-sizing:border-box}
 
+/* BODY */
 body{
   margin:0;
   height:100vh;
@@ -22,7 +23,7 @@ body{
   color:#fff;
 }
 
-/* CANVAS */
+/* CANVAS CONFETTI */
 canvas{
   position:fixed;
   inset:0;
@@ -37,7 +38,6 @@ canvas{
   opacity:.8;
   animation:rise linear infinite;
 }
-
 @keyframes rise{
   from{transform:translateY(0) scale(.7);opacity:.9}
   to{transform:translateY(-120vh) scale(1.5);opacity:0}
@@ -52,7 +52,6 @@ canvas{
   max-width:420px;
   animation:fadeUp 1.5s ease;
 }
-
 @keyframes fadeUp{
   from{opacity:0;transform:translateY(25px)}
   to{opacity:1;transform:translateY(0)}
@@ -63,7 +62,6 @@ h1{
   margin-bottom:14px;
   animation:pulse 2s infinite;
 }
-
 @keyframes pulse{
   0%,100%{transform:scale(1)}
   50%{transform:scale(1.05)}
@@ -75,27 +73,122 @@ h1{
   backdrop-filter:blur(22px);
   border-radius:30px;
   padding:30px 26px;
-  box-shadow:
-    0 40px 80px rgba(0,0,0,.8),
-    inset 0 0 40px rgba(255,255,255,.08);
+  box-shadow:0 40px 80px rgba(0,0,0,.8),inset 0 0 40px rgba(255,255,255,.08);
 }
-
 .card p{
   font-size:18px;
   line-height:1.75;
   margin:0;
+}
+
+/* BUTTON */
+.yes{
+  display:inline-block;
+  margin-top:20px;
+  padding:12px 30px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#ff5f7e,#ff8fab);
+  color:#fff;
+  font-weight:600;
+  text-decoration:none;
+  box-shadow:0 15px 35px rgba(0,0,0,.6);
+  transition:.25s;
+}
+.yes:hover{transform:scale(1.08);}
+
+/* FULLSCREEN VIDEO */
+#celebrateVideo{
+  display:none;
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  background:black;
+  z-index:9999;
+}
+
+/* LOADER */
+#loader{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:9998;
+}
+.loader-text{
+  font-size:1.5rem;
+  margin-bottom:12px;
+  color:#fff;
+  animation:pulse 1.2s infinite;
+}
+.emoji-row{
+  display:flex;
+  gap:14px;
+  margin-top:10px;
+}
+.emoji{
+  font-size:30px;
+  animation:bounce 1.2s infinite;
+}
+.emoji:nth-child(2){animation-delay:0.15s;}
+.emoji:nth-child(3){animation-delay:0.3s;}
+.emoji:nth-child(4){animation-delay:0.45s;}
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-18px);}
+}
+
+/* VIDEO PROGRESS BAR */
+#progressWrap{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:5px;
+  background:rgba(255,255,255,0.2);
+  display:none;
+  z-index:10000;
+}
+#progressBar{
+  width:0%;
+  height:100%;
+  background:linear-gradient(90deg,#ff5f7e,#ff2f92);
+  transition:width 0.1s linear;
 }
 </style>
 </head>
 
 <body>
 
-<audio autoplay loop>
+<!-- BACKGROUND MUSIC -->
+<audio id="bgMusic" loop autoplay>
   <source src="yes-music.mp3" type="audio/mpeg">
 </audio>
 
-<canvas id="c"></canvas>
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-text">Celebrating our love… 💖</div>
+  <div class="loader-text">Every heartbeat is yours… 💓</div>
+  <div class="loader-text">Forever starts now… 💕</div>
+  <div class="emoji-row">
+    <div class="emoji">💖</div>
+    <div class="emoji">💗</div>
+    <div class="emoji">💞</div>
+    <div class="emoji">💍</div>
+  </div>
+</div>
 
+<!-- FULLSCREEN VIDEO -->
+<video id="celebrateVideo" controls playsinline preload="auto">
+  <source src="yes-video.mp4" type="video/mp4">
+</video>
+
+<!-- PAGE CONTENT -->
+<canvas id="c"></canvas>
 <div class="container">
   <h1>YESSSS 😭💍</h1>
   <div class="card">
@@ -105,10 +198,25 @@ h1{
       <b>Forever starts now 💖</b>
     </p>
   </div>
+  <a class="yes" href="#" id="nextBtn">Play Our Romantic Video →</a>
 </div>
 
+<!-- FLOATING HEARTS SCRIPT -->
 <script>
-/* CONFETTI */
+const hearts=["💖","💗","💞","💘","❤️","✨"];
+for(let i=0;i<22;i++){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.textContent=hearts[Math.floor(Math.random()*hearts.length)];
+  h.style.left=Math.random()*100+"vw";
+  h.style.animationDuration=7+Math.random()*7+"s";
+  h.style.fontSize=16+Math.random()*24+"px";
+  document.body.appendChild(h);
+}
+</script>
+
+<!-- CONFETTI -->
+<script>
 const c=document.getElementById("c"),x=c.getContext("2d");
 function resize(){c.width=innerWidth;c.height=innerHeight}
 resize();addEventListener("resize",resize);
@@ -123,7 +231,6 @@ for(let i=0;i<140;i++){
     h:Math.random()*360
   });
 }
-
 function draw(){
   x.clearRect(0,0,c.width,c.height);
   for(const p of pieces){
@@ -137,18 +244,62 @@ function draw(){
   requestAnimationFrame(draw);
 }
 draw();
+</script>
 
-/* FLOATING HEARTS */
-const hearts=["💖","💗","💞","💘","❤️","✨"];
-for(let i=0;i<22;i++){
-  const h=document.createElement("div");
-  h.className="heart";
-  h.textContent=hearts[Math.floor(Math.random()*hearts.length)];
-  h.style.left=Math.random()*100+"vw";
-  h.style.animationDuration=7+Math.random()*7+"s";
-  h.style.fontSize=16+Math.random()*24+"px";
-  document.body.appendChild(h);
-}
+<!-- VIDEO + LOADER SCRIPT -->
+<script>
+const nextBtn=document.getElementById('nextBtn');
+const bgMusic=document.getElementById('bgMusic');
+const loader=document.getElementById('loader');
+const celebrateVideo=document.getElementById('celebrateVideo');
+const progressWrap=document.createElement('div');
+const progressBar=document.createElement('div');
+
+progressWrap.id="progressWrap";
+progressBar.id="progressBar";
+progressWrap.appendChild(progressBar);
+document.body.appendChild(progressWrap);
+
+nextBtn.addEventListener('click',e=>{
+  e.preventDefault();
+
+  // Stop background music
+  bgMusic.pause();
+  bgMusic.currentTime=0;
+
+  // Show loader
+  loader.style.display='flex';
+
+  const MIN_LOADER_TIME=2500;
+  const startTime=Date.now();
+
+  celebrateVideo.load();
+  celebrateVideo.style.display='block';
+
+  celebrateVideo.oncanplay=()=>{
+    const elapsed=Date.now()-startTime;
+    const remaining=Math.max(0,MIN_LOADER_TIME-elapsed);
+    setTimeout(()=>{
+      loader.style.display='none';
+      celebrateVideo.play().catch(()=>{});
+      progressWrap.style.display='block';
+    },remaining);
+  };
+});
+
+// Video progress
+celebrateVideo.addEventListener('timeupdate',()=>{
+  if(celebrateVideo.duration){
+    const percent=(celebrateVideo.currentTime/celebrateVideo.duration)*100;
+    progressBar.style.width=percent+'%';
+  }
+});
+
+// Video end redirect
+celebrateVideo.addEventListener('ended',()=>{
+  progressBar.style.width='100%';
+  window.location.href='ring.html';
+});
 </script>
 
 </body>

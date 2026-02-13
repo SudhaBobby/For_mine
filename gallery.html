@@ -21,19 +21,19 @@ body {
   overflow: hidden;
 }
 
-/* INTRO VIDEO */
-#introVideo {
+/* FULLSCREEN VIDEO */
+#celebrateVideo {
+  display: none;
   position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   background: black;
   z-index: 9999;
-  display: none;
 }
 
-/* PROGRESS BAR */
+/* VIDEO PROGRESS BAR */
 #progressWrap {
   position: fixed;
   bottom: 0;
@@ -50,6 +50,50 @@ body {
   width: 0%;
   background: linear-gradient(90deg, #ff5f7e, #ff2f92);
   transition: width 0.1s linear;
+}
+
+/* LOADER */
+#loader {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+}
+
+.loader-text {
+  font-size: 1.5rem;
+  margin-bottom: 18px;
+  color: #fff;
+  animation: pulse 1.2s infinite;
+  text-align: center;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; }
+}
+
+.emoji-row {
+  display: flex;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.emoji {
+  font-size: 30px;
+  animation: bounce 1.2s infinite;
+}
+
+.emoji:nth-child(2) { animation-delay: 0.15s; }
+.emoji:nth-child(3) { animation-delay: 0.3s; }
+.emoji:nth-child(4) { animation-delay: 0.45s; }
+
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-18px); }
 }
 
 /* MEMORY PAGE */
@@ -83,18 +127,9 @@ body {
   z-index: 10;
 }
 
-h1 {
-  color: #fff;
-  font-size: 26px;
-  margin: 0;
-}
+h1 { color: #fff; font-size: 26px; margin: 0; }
 
-/* animated text */
-.text {
-  color: #fff;
-  font-size: 18px;
-  line-height: 1.7;
-}
+.text { color: #fff; font-size: 18px; line-height: 1.7; }
 
 .text span {
   display: block;
@@ -138,55 +173,42 @@ h1 {
   background: var(--glass);
   color: #fff;
 }
-
-/* background controls */
-#bg-control {
-  position: fixed;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-#bg-control button {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  border: none;
-  background: var(--glass);
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-}
 </style>
 </head>
 
 <body>
 
-<!-- VIDEO -->
-<video id="introVideo" playsinline>
-  <source src="96.mp4" type="video/mp4">
+<!-- BACKGROUND MUSIC -->
+<audio id="bgMusic" loop autoplay>
+  <source src="music-gallery.mp3" type="audio/mpeg">
+</audio>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-text">our chinna memory… 💖</div>
+  <div class="loader-text">Naraya photos nama adukala but eithu ellam....💖</div>
+  <div class="loader-text">Namaku special... 💖</div>
+
+  <div class="emoji-row">
+    <div class="emoji">💕</div>
+    <div class="emoji">😆</div>
+    <div class="emoji">💍</div>
+    <div class="emoji">😍</div>
+  </div>
+</div>
+
+<!-- VIDEO PLAYER -->
+<video id="celebrateVideo" controls playsinline preload="auto">
+  <source src="memories.mp4" type="video/mp4">
 </video>
 
-<!-- PROGRESS BAR -->
+<!-- VIDEO PROGRESS -->
 <div id="progressWrap">
   <div id="progressBar"></div>
 </div>
 
-<audio id="bgMusic" loop>
-  <source src="music-gallery.mp3" type="audio/mpeg">
-</audio>
-
 <div class="memory">
   <img src="collage.jpg" alt="Our Memory" />
-
-  <div id="bg-control">
-    <button>▲</button>
-    <button>▼</button>
-  </div>
 
   <div class="overlay">
     <h1>One Special Memory ❤️</h1>
@@ -199,54 +221,75 @@ h1 {
       <span style="--i:5">Un pakkathula irundha feeling… words illa 💖</span>
       <span style="--i:6">Rendu peroda silence kooda nyabagam 🫶</span>
       <span style="--i:7">Forever ah… romba special ah ❤️</span>
+      <span style="--i:8">Eithu eppdiya nika kudathu...It will longlastaa irukanum ❤️</span>
     </div>
 
     <div class="actions">
       <a class="whatsapp"
          href="https://wa.me/9342584289?text=Indha memory romba special ah irukku ❤️"
          target="_blank">
-        WhatsApp 💬
+        Nama santhu adutha oru fav photo send pannu 💬
       </a>
 
-      <a href="#" class="yes" id="nextBtn">Next →</a>
+      <a href="#" class="yes" id="nextBtn">Next polaama →</a>
     </div>
   </div>
 </div>
 
 <script>
-const video = document.getElementById('introVideo');
 const nextBtn = document.getElementById('nextBtn');
-const music = document.getElementById('bgMusic');
+const bgMusic = document.getElementById('bgMusic');
+const loader = document.getElementById('loader');
+const celebrateVideo = document.getElementById('celebrateVideo');
 const progressWrap = document.getElementById('progressWrap');
 const progressBar = document.getElementById('progressBar');
 
-/* NEXT CLICK */
 nextBtn.addEventListener('click', e => {
   e.preventDefault();
 
-  music.pause();
-  video.style.display = 'block';
-  progressWrap.style.display = 'block';
+  // Stop background music
+  bgMusic.pause();
+  bgMusic.currentTime = 0;
 
-  video.play().catch(()=>{});
+  // Show loader
+  loader.style.display = 'flex';
+
+  const MIN_LOADER_TIME = 2500;
+  const startTime = Date.now();
+
+  celebrateVideo.load();
+  celebrateVideo.style.display = 'block';
+
+  celebrateVideo.oncanplay = () => {
+    const elapsed = Date.now() - startTime;
+    const remaining = Math.max(0, MIN_LOADER_TIME - elapsed);
+
+    setTimeout(() => {
+      loader.style.display = 'none';
+      celebrateVideo.play().catch(()=>{});
+      progressWrap.style.display = 'block';
+    }, remaining);
+  };
 });
 
-/* UPDATE PROGRESS */
-video.addEventListener('timeupdate', () => {
-  const percent = (video.currentTime / video.duration) * 100;
-  progressBar.style.width = percent + '%';
+// Update progress bar
+celebrateVideo.addEventListener('timeupdate', () => {
+  if(celebrateVideo.duration) {
+    const percent = (celebrateVideo.currentTime / celebrateVideo.duration) * 100;
+    progressBar.style.width = percent + '%';
+  }
 });
 
-/* VIDEO END */
-video.onended = () => {
+// Video end redirect
+celebrateVideo.addEventListener('ended', () => {
   progressBar.style.width = '100%';
   window.location.href = 'questions.html';
-};
+});
 
-/* MUSIC AUTOPLAY FIX */
+// Optional: Autoplay music on first body click (mobile)
 document.body.addEventListener('click', () => {
-  if (music.paused) music.play().catch(()=>{});
-}, { once:true });
+  if(bgMusic.paused) bgMusic.play().catch(()=>{});
+}, { once: true });
 </script>
 
 </body>

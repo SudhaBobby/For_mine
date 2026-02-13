@@ -10,26 +10,108 @@ body{
   margin:0;
   height:100vh;
   background:black;
-  display:flex;
-  align-items:center;
-  justify-content:center;
   font-family:system-ui,sans-serif;
   color:#fff;
   overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  position:relative;
 }
 
-/* START */
-#start{text-align:center;}
-#start h1{font-size:22px;margin-bottom:18px;}
+/* START SCREEN */
+#start{
+  text-align:center;
+  padding:20px 30px;
+  max-width:500px;
+  background: rgba(0,0,0,0.6);
+  border-radius:20px;
+  position:relative;
+  z-index:2;
+}
+#start h1{
+  font-size:32px;
+  margin-bottom:16px;
+  background: linear-gradient(135deg, #ff5f7e, #ff85a1, #ffc1e3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glow 2s ease-in-out infinite alternate;
+  text-shadow: 0 0 5px #ff5f7e, 0 0 10px #ff85a1, 0 0 20px #ffc1e3;
+}
+@keyframes glow {
+  from { text-shadow: 0 0 5px #ff5f7e, 0 0 10px #ff85a1, 0 0 20px #ffc1e3; }
+  to   { text-shadow: 0 0 15px #ff5f7e, 0 0 25px #ff85a1, 0 0 40px #ffc1e3; }
+}
+#start p{
+  font-size:16px;
+  margin:8px 0;
+  line-height:1.4;
+  color:#ffb6c1;
+  opacity:0;
+  animation: fadeIn 1s forwards;
+}
+#start p:nth-of-type(2){ animation-delay: 0.3s; }
+#start p:nth-of-type(3){ animation-delay: 0.6s; }
+
+@keyframes fadeIn {
+  to { opacity:1; }
+}
+
+/* Romantic Button */
 #start button{
+  margin-top:20px;
   padding:14px 42px;
   border-radius:999px;
   border:none;
-  background:linear-gradient(135deg,#ff5f7e,#ff85a1);
+  background: linear-gradient(135deg, #ff5f7e, #ff85a1);
   color:#fff;
   font-size:16px;
   font-weight:600;
   cursor:pointer;
+  position: relative;
+  overflow: hidden;
+  transition:0.3s;
+}
+#start button::before {
+  content:'';
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:300%;
+  height:300%;
+  background:rgba(255,255,255,0.1);
+  transform:translate(-50%, -50%) rotate(45deg);
+  transition:0.5s;
+}
+#start button:hover::before {
+  width:0%;
+  height:0%;
+}
+#start button:hover {
+  transform:scale(1.08);
+  box-shadow: 0 0 15px #ff5f7e, 0 0 25px #ff85a1;
+}
+
+/* Floating hearts */
+@keyframes floatHearts {
+  0% { transform: translateY(0) rotate(0deg); opacity:1; }
+  100% { transform: translateY(-80px) rotate(45deg); opacity:0; }
+}
+#start::after {
+  content:'❤️';
+  position:absolute;
+  font-size:24px;
+  animation: floatHearts 3s infinite;
+  left:20%;
+  top:80%;
+}
+#start::before {
+  content:'💖';
+  position:absolute;
+  font-size:28px;
+  animation: floatHearts 4s infinite;
+  left:70%;
+  top:85%;
 }
 
 /* LOADING */
@@ -40,9 +122,11 @@ body{
   display:none;
   align-items:center;
   justify-content:center;
+  z-index:5;
 }
 .loader{
-  width:48px;height:48px;
+  width:48px;
+  height:48px;
   border:4px solid rgba(255,255,255,.25);
   border-top-color:#ff5f7e;
   border-radius:50%;
@@ -53,21 +137,25 @@ body{
 /* VIDEO */
 video{
   position:fixed;
-  inset:0;
+  top:0;
+  left:0;
   width:100%;
   height:100%;
   object-fit:cover;
   display:none;
+  z-index:-1; /* behind everything */
 }
 
 /* PROGRESS */
 #progressWrap{
   position:fixed;
-  bottom:0;left:0;
+  bottom:0;
+  left:0;
   width:100%;
   height:5px;
   background:rgba(255,255,255,.25);
   display:none;
+  z-index:3;
 }
 #progress{
   height:100%;
@@ -81,23 +169,26 @@ video{
 
 <div id="start">
   <h1>One last thing… 🥹</h1>
+  <p>Unna naraya question katu toucher panni irukan… 💌</p>
+  <p>Don't hesitate me every time—it means the world! ❤️</p>
+  <p>Thank you so much...🥹❤️</p>
   <button onclick="startVideo()">Next →</button>
 </div>
 
 <div id="loading"><div class="loader"></div></div>
 
 <video id="video" playsinline>
-  <source src="96.mp4" type="video/mp4">
+  <source src="questions.mp4" type="video/mp4">
 </video>
 
 <div id="progressWrap"><div id="progress"></div></div>
 
 <script>
-const start=document.getElementById("start");
-const loading=document.getElementById("loading");
-const video=document.getElementById("video");
-const progressWrap=document.getElementById("progressWrap");
-const progress=document.getElementById("progress");
+const start = document.getElementById("start");
+const loading = document.getElementById("loading");
+const video = document.getElementById("video");
+const progressWrap = document.getElementById("progressWrap");
+const progress = document.getElementById("progress");
 
 function startVideo(){
   start.style.display="none";
@@ -107,15 +198,17 @@ function startVideo(){
     loading.style.display="none";
     video.style.display="block";
     progressWrap.style.display="block";
-    video.play().catch(()=>video.controls=true);
+    video.play().catch(()=>video.controls=true); // fallback to default controls
   },1200);
 }
 
-video.addEventListener("timeupdate",()=>{
-  progress.style.width=(video.currentTime/video.duration*100)+"%";
+// Update progress bar
+video.addEventListener("timeupdate", ()=>{
+  progress.style.width = (video.currentTime/video.duration*100)+"%";
 });
 
-video.onended=()=>location.href="voice.html";
+// Video ended → go to next page
+video.onended = () => location.href="voice.html";
 </script>
 
 </body>

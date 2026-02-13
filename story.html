@@ -2,18 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Our Story</title>
+<title>Oru chinna kadhal kathai</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
+* { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 body {
     margin: 0;
-    height: 100vh;
-    font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;
     background: linear-gradient(135deg, #ffb6c1, #fad0c4);
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #fff;
+    text-align: center;
     overflow: hidden;
 }
 
@@ -28,10 +32,7 @@ body {
     box-shadow: 0 15px 40px rgba(0,0,0,0.2);
 }
 
-h1 {
-    color: #fff;
-    margin-bottom: 20px;
-}
+h1 { margin-bottom: 20px; }
 
 .card {
     background: rgba(255,255,255,0.9);
@@ -43,9 +44,7 @@ h1 {
     min-height: 220px;
 }
 
-#text {
-    white-space: pre-line;
-}
+#text { white-space: pre-line; }
 
 .buttons {
     margin-top: 25px;
@@ -62,15 +61,8 @@ a {
     display: inline-block;
 }
 
-.next {
-    background: #ff5f7e;
-    color: white;
-}
-
-.whatsapp {
-    background: #25D366;
-    color: white;
-}
+.next { background: #ff5f7e; color: white; }
+.whatsapp { background: #25D366; color: white; }
 
 /* LOADER */
 #loader {
@@ -92,21 +84,14 @@ a {
 }
 
 @keyframes pulse {
-    0% { opacity: 0.4; }
-    50% { opacity: 1; }
-    100% { opacity: 0.4; }
+    0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; }
 }
 
-.emoji-row {
-    display: flex;
-    gap: 14px;
-}
-
+.emoji-row { display: flex; gap: 14px; }
 .emoji {
     font-size: 30px;
     animation: bounce 1.2s infinite;
 }
-
 .emoji:nth-child(2) { animation-delay: 0.15s; }
 .emoji:nth-child(3) { animation-delay: 0.3s; }
 .emoji:nth-child(4) { animation-delay: 0.45s; }
@@ -116,14 +101,15 @@ a {
     50% { transform: translateY(-18px); }
 }
 
-/* Video */
+/* VIDEO */
 #celebrateVideo {
     display: none;
     position: fixed;
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    background: black;
     z-index: 9999;
 }
 
@@ -161,7 +147,7 @@ a {
 
 <!-- LOADER -->
 <div id="loader">
-    <div class="loader-text">Turning the page… 😏📖</div>
+    <div class="loader-text">Starting and Present part of our LIFE… 😏📖</div>
     <div class="emoji-row">
         <div class="emoji">💕</div>
         <div class="emoji">🥹</div>
@@ -169,12 +155,6 @@ a {
         <div class="emoji">❤️</div>
     </div>
 </div>
-
-<!-- VIDEO PROGRESS BAR -->
-<div id="videoProgress">
-    <div id="videoProgressFill"></div>
-</div>
-
 <div class="container">
     <h1>Our Story ❤️</h1>
 
@@ -186,14 +166,15 @@ a {
         <a class="whatsapp"
            href="https://wa.me/9342584289?text=Hey… I read our story ❤️ My honest feedback is…"
            target="_blank">
-           Tell Me How You Feel 💬
+           Eitha padichu enna feel pandra 💬
         </a>
 
-        <a class="next" href="#" id="nextBtn">Next →</a>
+        <a class="next" href="#" id="nextBtn">Next polama →</a>
     </div>
 </div>
 
 <script>
+// Story typing effect
 const story = `
 Hey Bambara kata vayaa… 💕  
 
@@ -218,13 +199,9 @@ but idhu romba special nu mattum theriyum.
 Indha story unakku epdi irukku nu sollu…  
 un feedback dhaan indha story oda next chapter 💖
 `;
-
 let i = 0;
 const speed = 45;
 const textDiv = document.getElementById("text");
-const bgMusic = document.getElementById("bgMusic");
-const loader = document.getElementById("loader");
-
 function typeWriter() {
     if (i < story.length) {
         textDiv.textContent += story.charAt(i);
@@ -232,12 +209,20 @@ function typeWriter() {
         setTimeout(typeWriter, speed);
     }
 }
+typeWriter();
 
-/* Video */
+// Video setup
+const bgMusic = document.getElementById("bgMusic");
+const loader = document.getElementById("loader");
+const videoProgress = document.getElementById("videoProgress");
+const videoProgressFill = document.getElementById("videoProgressFill");
+
 const celebrateVideo = document.createElement("video");
 celebrateVideo.id = "celebrateVideo";
+celebrateVideo.controls = true;
 celebrateVideo.playsInline = true;
 celebrateVideo.preload = "auto";
+celebrateVideo.style.display = "none";
 
 const src = document.createElement("source");
 src.src = "Life.mp4";
@@ -245,26 +230,19 @@ src.type = "video/mp4";
 celebrateVideo.appendChild(src);
 document.body.appendChild(celebrateVideo);
 
-/* Progress bar */
-const videoProgress = document.getElementById("videoProgress");
-const videoProgressFill = document.getElementById("videoProgressFill");
-
-celebrateVideo.addEventListener("play", () => {
-    videoProgress.style.display = "block";
-});
-
+// Progress bar
+celebrateVideo.addEventListener("play", () => { videoProgress.style.display = "block"; });
 celebrateVideo.addEventListener("timeupdate", () => {
     if (celebrateVideo.duration) {
         const percent = (celebrateVideo.currentTime / celebrateVideo.duration) * 100;
         videoProgressFill.style.width = percent + "%";
     }
 });
-
-celebrateVideo.addEventListener("ended", () => {
-    videoProgress.style.display = "none";
+celebrateVideo.addEventListener("ended", () => { 
+    videoProgress.style.display = "none"; 
 });
 
-/* Play video */
+// Play video with loader and redirect
 function playVideoAndRedirect() {
     bgMusic.pause();
     bgMusic.currentTime = 0;
@@ -278,7 +256,6 @@ function playVideoAndRedirect() {
     celebrateVideo.oncanplay = () => {
         const elapsed = Date.now() - start;
         const remaining = Math.max(0, MIN_LOADER_TIME - elapsed);
-
         setTimeout(() => {
             loader.style.display = "none";
             celebrateVideo.style.display = "block";
@@ -295,8 +272,6 @@ document.getElementById("nextBtn").addEventListener("click", (e) => {
     e.preventDefault();
     playVideoAndRedirect();
 });
-
-typeWriter();
 </script>
 
 </body>

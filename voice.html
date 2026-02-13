@@ -134,11 +134,11 @@ h1{
 
   <!-- VOICE NOTE BUTTON -->
   <button class="voice-btn" id="voiceBtn">
-    🎙️ Tap to hear me
+    🎙️ Enn voice kakanum na call pannu eitha click panna onnum illa
   </button>
 
   <br>
-  <a class="next" href="ring.html">Next →</a>
+  <a class="next" href="promise.html">Next →</a>
 </div>
 
 <audio id="voice">
@@ -154,7 +154,7 @@ btn.addEventListener("click",()=>{
   if(voice.paused){
     voice.play();
     btn.classList.add("playing");
-    btn.innerHTML="💖 Playing…";
+    btn.innerHTML="💖 Calling…";
   }else{
     voice.pause();
     voice.currentTime=0;
