@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Our Story</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #ffb6c1, #fad0c4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.container {
+    text-align: center;
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(12px);
+    padding: 30px;
+    border-radius: 25px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
+h1 {
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: rgba(255,255,255,0.9);
+    padding: 22px;
+    border-radius: 18px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #444;
+    min-height: 220px;
+}
+
+#text {
+    white-space: pre-line;
+}
+
+.buttons {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+a {
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 25px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.next {
+    background: #ff5f7e;
+    color: white;
+}
+
+.whatsapp {
+    background: #25D366;
+    color: white;
+}
+
+/* LOADER */
+#loader {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9998;
+}
+
+.loader-text {
+    font-size: 1.25rem;
+    margin-bottom: 18px;
+    color: #fff;
+    animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.4; }
+    50% { opacity: 1; }
+    100% { opacity: 0.4; }
+}
+
+.emoji-row {
+    display: flex;
+    gap: 14px;
+}
+
+.emoji {
+    font-size: 30px;
+    animation: bounce 1.2s infinite;
+}
+
+.emoji:nth-child(2) { animation-delay: 0.15s; }
+.emoji:nth-child(3) { animation-delay: 0.3s; }
+.emoji:nth-child(4) { animation-delay: 0.45s; }
+
+@keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-18px); }
+}
+
+/* Video */
+#celebrateVideo {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 9999;
+}
+
+/* VIDEO PROGRESS BAR */
+#videoProgress {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 8px;
+    background: rgba(255,255,255,0.35);
+    border-radius: 10px;
+    overflow: hidden;
+    display: none;
+    z-index: 10000;
+}
+
+#videoProgressFill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(135deg, #ff5f7e, #ff2f92);
+    border-radius: 10px;
+    transition: width 0.15s linear;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Background music -->
+<audio id="bgMusic" autoplay loop>
+    <source src="music-story.mp3" type="audio/mpeg">
+</audio>
+
+<!-- LOADER -->
+<div id="loader">
+    <div class="loader-text">Turning the page… 😏📖</div>
+    <div class="emoji-row">
+        <div class="emoji">💕</div>
+        <div class="emoji">🥹</div>
+        <div class="emoji">✨</div>
+        <div class="emoji">❤️</div>
+    </div>
+</div>
+
+<!-- VIDEO PROGRESS BAR -->
+<div id="videoProgress">
+    <div id="videoProgressFill"></div>
+</div>
+
+<div class="container">
+    <h1>Our Story ❤️</h1>
+
+    <div class="card">
+        <div id="text"></div>
+    </div>
+
+    <div class="buttons">
+        <a class="whatsapp"
+           href="https://wa.me/9342584289?text=Hey… I read our story ❤️ My honest feedback is…"
+           target="_blank">
+           Tell Me How You Feel 💬
+        </a>
+
+        <a class="next" href="#" id="nextBtn">Next →</a>
+    </div>
+</div>
+
+<script>
+const story = `
+Hey Bambara kata vayaa… 💕  
+
+Idhu edho periya story illa…  
+but romba simple ah start aachu.
+
+Oru small conversation…  
+apram oru “good morning”…  
+apram adhu daily habit aaiduchu ☀️
+
+Un message varala na,  
+edho miss aanadhu maari feel aagum…  
+paakama irukka mudiyadha oru habit 😌
+
+Sirippu, silence, random thoughts…  
+ellamey un kooda share panna thonudhu.
+
+Idhu love ah… illa affection ah…  
+ennaku innum theriyala 💭  
+but idhu romba special nu mattum theriyum.
+
+Indha story unakku epdi irukku nu sollu…  
+un feedback dhaan indha story oda next chapter 💖
+`;
+
+let i = 0;
+const speed = 45;
+const textDiv = document.getElementById("text");
+const bgMusic = document.getElementById("bgMusic");
+const loader = document.getElementById("loader");
+
+function typeWriter() {
+    if (i < story.length) {
+        textDiv.textContent += story.charAt(i);
+        i++;
+        setTimeout(typeWriter, speed);
+    }
+}
+
+/* Video */
+const celebrateVideo = document.createElement("video");
+celebrateVideo.id = "celebrateVideo";
+celebrateVideo.playsInline = true;
+celebrateVideo.preload = "auto";
+
+const src = document.createElement("source");
+src.src = "Life.mp4";
+src.type = "video/mp4";
+celebrateVideo.appendChild(src);
+document.body.appendChild(celebrateVideo);
+
+/* Progress bar */
+const videoProgress = document.getElementById("videoProgress");
+const videoProgressFill = document.getElementById("videoProgressFill");
+
+celebrateVideo.addEventListener("play", () => {
+    videoProgress.style.display = "block";
+});
+
+celebrateVideo.addEventListener("timeupdate", () => {
+    if (celebrateVideo.duration) {
+        const percent = (celebrateVideo.currentTime / celebrateVideo.duration) * 100;
+        videoProgressFill.style.width = percent + "%";
+    }
+});
+
+celebrateVideo.addEventListener("ended", () => {
+    videoProgress.style.display = "none";
+});
+
+/* Play video */
+function playVideoAndRedirect() {
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
+
+    loader.style.display = "flex";
+    celebrateVideo.load();
+
+    const MIN_LOADER_TIME = 2500;
+    const start = Date.now();
+
+    celebrateVideo.oncanplay = () => {
+        const elapsed = Date.now() - start;
+        const remaining = Math.max(0, MIN_LOADER_TIME - elapsed);
+
+        setTimeout(() => {
+            loader.style.display = "none";
+            celebrateVideo.style.display = "block";
+            celebrateVideo.play();
+        }, remaining);
+    };
+
+    celebrateVideo.addEventListener("ended", () => {
+        window.location.href = "gallery.html";
+    }, { once: true });
+}
+
+document.getElementById("nextBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    playVideoAndRedirect();
+});
+
+typeWriter();
+</script>
+
+</body>
+</html>

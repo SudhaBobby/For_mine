@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Ring 💍</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  font-family:'Segoe UI', system-ui, sans-serif;
+  background:radial-gradient(circle at top,#1b0f17,#080406);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  color:#fff;
+}
+
+/* FLOATING SPARKLES */
+.sparkle{
+  position:absolute;
+  bottom:-20px;
+  font-size:14px;
+  opacity:.6;
+  animation:floatUp linear infinite;
+}
+@keyframes floatUp{
+  from{transform:translateY(0) scale(.8); opacity:.6}
+  to{transform:translateY(-120vh) scale(1.4); opacity:0}
+}
+
+/* CENTER */
+.container{
+  text-align:center;
+  width:90%;
+  max-width:420px;
+  z-index:2;
+}
+
+h1{
+  font-size:28px;
+  margin-bottom:14px;
+  animation:fadeIn 1s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(10px)}
+  to{opacity:1; transform:translateY(0)}
+}
+
+/* RING */
+.ring{
+  font-size:80px;
+  margin:20px auto;
+  width:120px;
+  height:120px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:rgba(255,255,255,0.08);
+  box-shadow:0 0 40px rgba(255,180,210,.6);
+  cursor:pointer;
+  user-select:none;
+  transition:.2s;
+}
+
+.ring.hold{
+  animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.08)}
+  100%{transform:scale(1)}
+}
+
+/* CARD */
+.card{
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(14px);
+  border-radius:24px;
+  padding:22px;
+  box-shadow:0 25px 60px rgba(0,0,0,.6);
+  animation:fadeIn 1.2s ease;
+}
+
+.card p{
+  font-size:17px;
+  line-height:1.7;
+  margin:0;
+}
+
+/* PROGRESS */
+.progress{
+  height:6px;
+  width:100%;
+  background:rgba(255,255,255,.15);
+  border-radius:10px;
+  overflow:hidden;
+  margin-top:14px;
+}
+
+.bar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#ff5f7e,#ffb3c7);
+  transition:.1s;
+}
+
+/* BUTTON */
+.yes{
+  display:inline-block;
+  margin-top:22px;
+  padding:12px 36px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#ff5f7e,#ff8fab);
+  color:#fff;
+  font-weight:600;
+  text-decoration:none;
+  box-shadow:0 15px 35px rgba(0,0,0,.6);
+  opacity:.4;
+  pointer-events:none;
+  transition:.3s;
+}
+
+.yes.active{
+  opacity:1;
+  pointer-events:auto;
+  transform:scale(1.05);
+}
+</style>
+</head>
+
+<body>
+
+<audio autoplay loop>
+  <source src="music-ring.mp3" type="audio/mpeg">
+</audio>
+
+<!-- sparkles -->
+<script>
+for(let i=0;i<18;i++){
+  const s=document.createElement("div");
+  s.className="sparkle";
+  s.textContent="✨";
+  s.style.left=Math.random()*100+"vw";
+  s.style.animationDuration=6+Math.random()*6+"s";
+  s.style.fontSize=10+Math.random()*14+"px";
+  document.body.appendChild(s);
+}
+</script>
+
+<div class="container">
+  <h1>The Ring 💍</h1>
+
+  <div class="ring" id="ring">💍</div>
+
+  <div class="card">
+    <p>
+      Close your eyes…<br>
+      Imagine this moment…<br>
+      This ring… this promise…<br>
+      forever ❤️
+    </p>
+
+    <div class="progress">
+      <div class="bar" id="bar"></div>
+    </div>
+
+    <p style="font-size:13px; opacity:.7; margin-top:10px">
+      Hold the ring like you’re showing your ring finger 🥹
+    </p>
+  </div>
+
+  <a class="yes" id="next" href="index.html">Answer Me →</a>
+</div>
+
+<script>
+let hold=false, progress=0;
+const ring=document.getElementById("ring");
+const bar=document.getElementById("bar");
+const next=document.getElementById("next");
+
+function startHold(){
+  hold=true;
+  ring.classList.add("hold");
+  const interval=setInterval(()=>{
+    if(!hold){clearInterval(interval);return;}
+    progress+=2;
+    bar.style.width=progress+"%";
+    if(progress>=100){
+      clearInterval(interval);
+      ring.classList.remove("hold");
+      next.classList.add("active");
+    }
+  },60);
+}
+
+function stopHold(){
+  hold=false;
+  ring.classList.remove("hold");
+}
+
+ring.addEventListener("mousedown",startHold);
+ring.addEventListener("touchstart",startHold);
+ring.addEventListener("mouseup",stopHold);
+ring.addEventListener("mouseleave",stopHold);
+ring.addEventListener("touchend",stopHold);
+</script>
+
+</body>
+</html>

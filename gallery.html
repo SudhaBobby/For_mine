@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Our Memory</title>
+
+<style>
+:root {
+  --accent: #ff5f7e;
+  --glass: rgba(255,255,255,0.12);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #000;
+  overflow: hidden;
+}
+
+/* INTRO VIDEO */
+#introVideo {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: black;
+  z-index: 9999;
+  display: none;
+}
+
+/* PROGRESS BAR */
+#progressWrap {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: rgba(255,255,255,0.2);
+  z-index: 10000;
+  display: none;
+}
+
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ff5f7e, #ff2f92);
+  transition: width 0.1s linear;
+}
+
+/* MEMORY PAGE */
+.memory {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #000;
+}
+
+.memory img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 50%;
+  transition: object-position 0.25s ease-out;
+}
+
+/* overlay */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, rgba(0,0,0,0.15), rgba(0,0,0,0.85)),
+    linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.2), rgba(0,0,0,0.7));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 32px 22px env(safe-area-inset-bottom);
+  text-align: center;
+  z-index: 10;
+}
+
+h1 {
+  color: #fff;
+  font-size: 26px;
+  margin: 0;
+}
+
+/* animated text */
+.text {
+  color: #fff;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.text span {
+  display: block;
+  opacity: 0;
+  animation: fadeUp 1.4s ease forwards;
+}
+
+.text span:nth-child(n) {
+  animation-delay: calc(var(--i) * 0.18s);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* buttons */
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.yes, .whatsapp {
+  text-decoration: none;
+  padding: 12px 28px;
+  border-radius: 999px;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.yes {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(0,0,0,.45);
+}
+
+.whatsapp {
+  background: var(--glass);
+  color: #fff;
+}
+
+/* background controls */
+#bg-control {
+  position: fixed;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#bg-control button {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  background: var(--glass);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- VIDEO -->
+<video id="introVideo" playsinline>
+  <source src="96.mp4" type="video/mp4">
+</video>
+
+<!-- PROGRESS BAR -->
+<div id="progressWrap">
+  <div id="progressBar"></div>
+</div>
+
+<audio id="bgMusic" loop>
+  <source src="music-gallery.mp3" type="audio/mpeg">
+</audio>
+
+<div class="memory">
+  <img src="collage.jpg" alt="Our Memory" />
+
+  <div id="bg-control">
+    <button>▲</button>
+    <button>▼</button>
+  </div>
+
+  <div class="overlay">
+    <h1>One Special Memory ❤️</h1>
+
+    <div class="text">
+      <span style="--i:1">Indha photo ellam… time nikkura maari irukku 🥹</span>
+      <span style="--i:2">Sirippu mattum illa… adhigamaana feeling ❤️</span>
+      <span style="--i:3">Oru nodi thirumba varadhu nu therinjum…</span>
+      <span style="--i:4">Indha moment ah marakka mudiyala 😌</span>
+      <span style="--i:5">Un pakkathula irundha feeling… words illa 💖</span>
+      <span style="--i:6">Rendu peroda silence kooda nyabagam 🫶</span>
+      <span style="--i:7">Forever ah… romba special ah ❤️</span>
+    </div>
+
+    <div class="actions">
+      <a class="whatsapp"
+         href="https://wa.me/9342584289?text=Indha memory romba special ah irukku ❤️"
+         target="_blank">
+        WhatsApp 💬
+      </a>
+
+      <a href="#" class="yes" id="nextBtn">Next →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const video = document.getElementById('introVideo');
+const nextBtn = document.getElementById('nextBtn');
+const music = document.getElementById('bgMusic');
+const progressWrap = document.getElementById('progressWrap');
+const progressBar = document.getElementById('progressBar');
+
+/* NEXT CLICK */
+nextBtn.addEventListener('click', e => {
+  e.preventDefault();
+
+  music.pause();
+  video.style.display = 'block';
+  progressWrap.style.display = 'block';
+
+  video.play().catch(()=>{});
+});
+
+/* UPDATE PROGRESS */
+video.addEventListener('timeupdate', () => {
+  const percent = (video.currentTime / video.duration) * 100;
+  progressBar.style.width = percent + '%';
+});
+
+/* VIDEO END */
+video.onended = () => {
+  progressBar.style.width = '100%';
+  window.location.href = 'questions.html';
+};
+
+/* MUSIC AUTOPLAY FIX */
+document.body.addEventListener('click', () => {
+  if (music.paused) music.play().catch(()=>{});
+}, { once:true });
+</script>
+
+</body>
+</html>
