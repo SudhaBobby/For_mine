@@ -147,18 +147,19 @@ button {
   50% { transform: translateY(-18px); }
 }
 
-/* Video */
+/* VIDEO */
 #celebrateVideo {
   display: none;
   position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: black;
   z-index: 9999;
 }
 
-/* VIDEO PROGRESS BAR */
+/* Progress bar */
 #videoProgress {
   position: fixed;
   bottom: 25px;
@@ -178,7 +179,6 @@ button {
   width: 0%;
   background: linear-gradient(135deg, #ff4b7d, #ff2f92);
   border-radius: 10px;
-  transition: width 0.15s linear;
 }
 
 @keyframes fadeIn {
@@ -194,7 +194,7 @@ button {
   <source src="music-questions.mp3" type="audio/mpeg">
 </audio>
 
-<!-- FUNNY LOADER -->
+<!-- LOADER -->
 <div id="loader">
   <div class="loader-text">Checking your answer… 😏💖</div>
   <div class="loader-text">Start of our life... 💕💖</div>
@@ -206,7 +206,7 @@ button {
   </div>
 </div>
 
-<!-- VIDEO PROGRESS BAR -->
+<!-- VIDEO PROGRESS -->
 <div id="videoProgress">
   <div id="videoProgressFill"></div>
 </div>
@@ -225,6 +225,11 @@ button {
   <p id="msg"></p>
 </div>
 
+<!-- VIDEO PLAYER -->
+<video id="celebrateVideo" controls playsinline preload="auto">
+  <source src="96.mp4" type="video/mp4">
+</video>
+
 <script>
 const qas = [
   { q: "Who is the most handsome person in your life? 😏", a: "sudar paiya" },
@@ -240,39 +245,11 @@ const card = document.getElementById("card");
 const msg = document.getElementById("msg");
 const loader = document.getElementById("loader");
 const bgMusic = document.getElementById("bgMusic");
+const video = document.getElementById("celebrateVideo");
 
-/* Video */
-const celebrateVideo = document.createElement("video");
-celebrateVideo.id = "celebrateVideo";
-celebrateVideo.playsInline = true;
-celebrateVideo.preload = "auto";
-
-const src = document.createElement("source");
-src.src = "96.mp4";
-src.type = "video/mp4";
-celebrateVideo.appendChild(src);
-document.body.appendChild(celebrateVideo);
-
-/* Progress bar */
 const videoProgress = document.getElementById("videoProgress");
 const videoProgressFill = document.getElementById("videoProgressFill");
 
-celebrateVideo.addEventListener("play", () => {
-  videoProgress.style.display = "block";
-});
-
-celebrateVideo.addEventListener("timeupdate", () => {
-  if (celebrateVideo.duration) {
-    const percent = (celebrateVideo.currentTime / celebrateVideo.duration) * 100;
-    videoProgressFill.style.width = percent + "%";
-  }
-});
-
-celebrateVideo.addEventListener("ended", () => {
-  videoProgress.style.display = "none";
-});
-
-/* Check answer */
 function check() {
   const v = document.getElementById("answer").value.trim().toLowerCase();
 
@@ -285,25 +262,12 @@ function check() {
 
     loader.style.display = "flex";
 
-    celebrateVideo.load();
-
-    const MIN_LOADER_TIME = 2500;
-    const start = Date.now();
-
-    celebrateVideo.oncanplay = () => {
-      const elapsed = Date.now() - start;
-      const remaining = Math.max(0, MIN_LOADER_TIME - elapsed);
-
-      setTimeout(() => {
-        loader.style.display = "none";
-        celebrateVideo.style.display = "block";
-        celebrateVideo.play();
-      }, remaining);
-    };
-
-    celebrateVideo.addEventListener("ended", () => {
-      window.location.href = "story.html";
-    }, { once: true });
+    setTimeout(() => {
+      loader.style.display = "none";
+      video.style.display = "block";
+      video.play();
+      videoProgress.style.display = "block";
+    }, 2500);
 
   } else {
     msg.innerText = "❌ Wrong 😏 Try again, madam 💕";
@@ -311,6 +275,13 @@ function check() {
     setTimeout(() => card.classList.remove("shake"), 400);
   }
 }
+
+video.addEventListener("timeupdate", () => {
+  if (video.duration) {
+    videoProgressFill.style.width =
+      (video.currentTime / video.duration) * 100 + "%";
+  }
+});
 
 /* Floating hearts */
 setInterval(() => {
