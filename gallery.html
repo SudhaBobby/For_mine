@@ -10,9 +10,7 @@
   --accent: #ff5f7e;
   --glass: rgba(255,255,255,0.12);
 }
-
 * { box-sizing: border-box; }
-
 body {
   margin: 0;
   height: 100vh;
@@ -44,7 +42,6 @@ body {
   z-index: 10000;
   display: none;
 }
-
 #progressBar {
   height: 100%;
   width: 0%;
@@ -63,7 +60,6 @@ body {
   justify-content: center;
   z-index: 9998;
 }
-
 .loader-text {
   font-size: 1.5rem;
   margin-bottom: 18px;
@@ -71,26 +67,21 @@ body {
   animation: pulse 1.2s infinite;
   text-align: center;
 }
-
 @keyframes pulse {
   0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; }
 }
-
 .emoji-row {
   display: flex;
   gap: 14px;
   margin-top: 12px;
 }
-
 .emoji {
   font-size: 30px;
   animation: bounce 1.2s infinite;
 }
-
 .emoji:nth-child(2) { animation-delay: 0.15s; }
 .emoji:nth-child(3) { animation-delay: 0.3s; }
 .emoji:nth-child(4) { animation-delay: 0.45s; }
-
 @keyframes bounce {
   0%,100% { transform: translateY(0); }
   50% { transform: translateY(-18px); }
@@ -103,7 +94,6 @@ body {
   height: 100vh;
   background: #000;
 }
-
 .memory img {
   width: 100%;
   height: 100%;
@@ -111,7 +101,6 @@ body {
   object-position: center 50%;
   transition: object-position 0.25s ease-out;
 }
-
 /* overlay */
 .overlay {
   position: absolute;
@@ -126,26 +115,20 @@ body {
   text-align: center;
   z-index: 10;
 }
-
 h1 { color: #fff; font-size: 26px; margin: 0; }
-
 .text { color: #fff; font-size: 18px; line-height: 1.7; }
-
 .text span {
   display: block;
   opacity: 0;
   animation: fadeUp 1.4s ease forwards;
 }
-
 .text span:nth-child(n) {
   animation-delay: calc(var(--i) * 0.18s);
 }
-
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(18px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
 /* buttons */
 .actions {
   display: flex;
@@ -153,7 +136,6 @@ h1 { color: #fff; font-size: 26px; margin: 0; }
   gap: 12px;
   flex-wrap: wrap;
 }
-
 .yes, .whatsapp {
   text-decoration: none;
   padding: 12px 28px;
@@ -162,13 +144,11 @@ h1 { color: #fff; font-size: 26px; margin: 0; }
   backdrop-filter: blur(8px);
   transition: transform .2s ease, box-shadow .2s ease;
 }
-
 .yes {
   background: var(--accent);
   color: #fff;
   box-shadow: 0 12px 30px rgba(0,0,0,.45);
 }
-
 .whatsapp {
   background: var(--glass);
   color: #fff;
@@ -257,16 +237,19 @@ nextBtn.addEventListener('click', e => {
   const MIN_LOADER_TIME = 2500;
   const startTime = Date.now();
 
-  celebrateVideo.load();
   celebrateVideo.style.display = 'block';
 
-  celebrateVideo.oncanplay = () => {
+  // Ensure video plays after loader
+  celebrateVideo.oncanplaythrough = () => {
     const elapsed = Date.now() - startTime;
     const remaining = Math.max(0, MIN_LOADER_TIME - elapsed);
 
     setTimeout(() => {
       loader.style.display = 'none';
-      celebrateVideo.play().catch(()=>{});
+      celebrateVideo.play().catch(err => {
+        console.log("Video autoplay blocked:", err);
+        alert("Please tap on video to play.");
+      });
       progressWrap.style.display = 'block';
     }, remaining);
   };
