@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Will You Marry Me 💍</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --pink:#ff5f7e;
+  --rose:#ff9eb8;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  height:100vh;
+  font-family:'Segoe UI', system-ui, sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(255,120,160,.25), transparent 60%),
+    linear-gradient(rgba(15,8,12,.9),rgba(5,3,6,.95)),
+    url("https://images.unsplash.com/photo-1517841905240-472988babdf9");
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  color:#fff;
+}
+
+/* FLOATING HEARTS */
+.heart{
+  position:absolute;
+  bottom:-40px;
+  animation:floatUp linear infinite;
+  filter:blur(.3px);
+  opacity:.75;
+}
+
+@keyframes floatUp{
+  from{transform:translateY(0) scale(.6); opacity:.8}
+  to{transform:translateY(-130vh) scale(1.5); opacity:0}
+}
+
+/* SPARKLES */
+.sparkle{
+  position:absolute;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:white;
+  opacity:.8;
+  animation:spark 3s infinite;
+}
+
+@keyframes spark{
+  0%{transform:scale(0); opacity:0}
+  50%{transform:scale(1); opacity:1}
+  100%{transform:scale(0); opacity:0}
+}
+
+/* CENTER */
+.container{
+  text-align:center;
+  width:92%;
+  max-width:420px;
+  z-index:2;
+  animation:fadeIn 1.4s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(20px)}
+  to{opacity:1; transform:translateY(0)}
+}
+
+h1{
+  font-size:32px;
+  margin-bottom:6px;
+}
+
+.subtitle{
+  font-size:15px;
+  opacity:.9;
+  margin-bottom:22px;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(
+    135deg,
+    rgba(255,255,255,.18),
+    rgba(255,255,255,.05)
+  );
+  backdrop-filter:blur(20px);
+  border-radius:30px;
+  padding:28px 26px;
+  box-shadow:
+    0 40px 80px rgba(0,0,0,.75),
+    inset 0 0 40px rgba(255,255,255,.06);
+  margin-bottom:26px;
+}
+
+.card p{
+  font-size:17px;
+  line-height:1.75;
+  margin:0;
+}
+
+/* BUTTONS */
+.buttons{
+  display:flex;
+  gap:18px;
+  justify-content:center;
+}
+
+button{
+  border:none;
+  padding:15px 36px;
+  font-size:16px;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:700;
+  transition:.35s cubic-bezier(.2,.8,.3,1);
+}
+
+/* YES BUTTON */
+.yes{
+  background:linear-gradient(135deg,var(--pink),var(--rose));
+  color:#fff;
+  box-shadow:0 20px 45px rgba(255,95,126,.45);
+  animation:pulse 1.8s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.07)}
+}
+
+.yes:hover{
+  transform:scale(1.12);
+}
+
+/* NO BUTTON */
+.no{
+  background:rgba(255,255,255,.18);
+  color:#fff;
+  backdrop-filter:blur(12px);
+}
+</style>
+</head>
+
+<body>
+
+<audio autoplay loop>
+  <source src="music-ring.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* HEARTS */
+const hearts=["💖","💗","💞","💘","❤️","✨"];
+for(let i=0;i<28;i++){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.textContent=hearts[Math.floor(Math.random()*hearts.length)];
+  h.style.left=Math.random()*100+"vw";
+  h.style.animationDuration=6+Math.random()*8+"s";
+  h.style.fontSize=14+Math.random()*22+"px";
+  document.body.appendChild(h);
+}
+
+/* SPARKLES */
+for(let i=0;i<16;i++){
+  const s=document.createElement("div");
+  s.className="sparkle";
+  s.style.left=Math.random()*100+"vw";
+  s.style.top=Math.random()*100+"vh";
+  s.style.animationDelay=Math.random()*3+"s";
+  document.body.appendChild(s);
+}
+</script>
+
+<div class="container">
+  <h1>Hey <span id="name">My Love</span> ❤️</h1>
+  <p class="subtitle">
+    Idhu oru kelvi illa… idhu en life decision 🥹
+  </p>
+
+  <div class="card">
+    <p>
+      Sirippu… sandai… silence… ellathukum mela,<br>
+      <b>nee dhan en home ❤️</b><br><br>
+      En kai pidichu, en life full ah,<br>
+      <b>Will you marry me? 💍</b>
+    </p>
+  </div>
+
+  <div class="buttons">
+    <button class="yes" onclick="yes()">YES 💖</button>
+    <button class="no" id="no">NO 😏</button>
+  </div>
+</div>
+
+<script>
+const p=new URLSearchParams(location.search);
+if(p.get("name")) document.getElementById("name").innerText=p.get("name");
+
+const no=document.getElementById("no");
+no.addEventListener("mouseover",()=>{
+  no.style.position="absolute";
+  no.style.left=Math.random()*85+"%";
+  no.style.top=Math.random()*85+"%";
+});
+
+function yes(){
+  location.href="yes.html"+location.search;
+}
+</script>
+
+</body>
+</html>
